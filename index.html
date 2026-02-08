@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Preu PAES + IB — Estudio inteligente</title>
+  <meta name="description" content="Preuniversitario moderno para PAES e IB: estudiar, practicar, evaluarse, progreso, rutas personalizadas y tutor IA." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="app-shell">
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">⟡</div>
+        <div>
+          <div class="brand-title">Preu PAES + IB</div>
+          <div class="brand-subtitle">Estudio inteligente • sin saturación</div>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="search-wrap">
+          <input id="globalSearch" class="search" type="search" placeholder="Buscar: tema, eje, video, ensayo... (máx. 2 clics)" autocomplete="off" />
+          <div id="searchResults" class="search-results hidden" role="listbox" aria-label="Resultados de búsqueda"></div>
+        </div>
+
+        <button id="continueBtn" class="btn primary" title="Continuar donde quedé">▶ Continuar</button>
+
+        <button id="themeBtn" class="btn ghost" title="Cambiar modo">
+          <span id="themeIcon">🌙</span>
+          <span class="hide-sm">Modo</span>
+        </button>
+
+        <button id="profileBtn" class="btn ghost" title="Perfil">👤</button>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="main">
+      <!-- LEFT NAV (max 5) -->
+      <nav class="sidebar" aria-label="Navegación principal">
+        <button class="nav-item active" data-page="home">
+          <span class="nav-icon">🏠</span><span>Inicio</span>
+        </button>
+        <button class="nav-item" data-page="study">
+          <span class="nav-icon">📚</span><span>Estudiar</span>
+        </button>
+        <button class="nav-item" data-page="practice">
+          <span class="nav-icon">📝</span><span>Practicar</span>
+        </button>
+        <button class="nav-item" data-page="progress">
+          <span class="nav-icon">📊</span><span>Progreso</span>
+        </button>
+        <button class="nav-item" data-page="tutor">
+          <span class="nav-icon">🤖</span><span>Tutor IA</span>
+        </button>
+
+        <div class="sidebar-footer">
+          <div class="mini-card">
+            <div class="mini-title">Estado emocional</div>
+            <div id="calmMessage" class="mini-text">Vas bien. Esto es normal. Paso a paso.</div>
+            <button id="motivationBtn" class="btn tiny ghost">Cambiar mensaje</button>
+          </div>
+          <div class="mini-card">
+            <div class="mini-title">Privacidad</div>
+            <div class="mini-text">Tus datos se guardan localmente (en este dispositivo) hasta que conectes un servidor.</div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- CONTENT -->
+      <section class="content">
+        <!-- HOME -->
+        <section id="page-home" class="page">
+          <div class="page-header">
+            <div>
+              <h1>Qué estudiar hoy</h1>
+              <p class="muted">Un plan claro para avanzar sin ansiedad. Todo a 2 clics.</p>
+            </div>
+            <div class="pill-row">
+              <span class="pill" id="streakPill">🔥 Racha: 0</span>
+              <span class="pill" id="levelPill">🏆 Nivel: 1</span>
+              <span class="pill" id="nextReviewPill">⏱ Próximo repaso: —</span>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="card span-7">
+              <div class="card-header">
+                <h2>Tu ruta recomendada</h2>
+                <div class="muted small">Basada en diagnóstico + progreso + repasos</div>
+              </div>
+
+              <div id="todayPlan" class="stack"></div>
+
+              <div class="card-actions">
+                <button class="btn primary" id="startPlanBtn">Empezar plan</button>
+                <button class="btn ghost" id="runDiagnosticBtn">Hacer diagnóstico (5 min)</button>
+              </div>
+            </div>
+
+            <div class="card span-5">
+              <div class="card-header">
+                <h2>Progreso rápido</h2>
+                <div class="muted small">Gráficos simples (no técnicos)</div>
+              </div>
+
+              <div class="kpis">
+                <div class="kpi">
+                  <div class="kpi-label">PAES estimado</div>
+                  <div class="kpi-value" id="kpiScore">—</div>
+                  <div class="kpi-sub muted small">Se ajusta con ensayos</div>
+                </div>
+                <div class="kpi">
+                  <div class="kpi-label">Metas semanales</div>
+                  <div class="kpi-value" id="kpiGoals">0/0</div>
+                  <div class="kpi-sub muted small">Cumplidas / totales</div>
+                </div>
+              </div>
+
+              <div class="simple-chart">
+                <div class="chart-title">Evolución (últimos 7)</div>
+                <div id="sparkline" class="sparkline" aria-label="Evolución de resultados"></div>
+              </div>
+
+              <div class="card-actions">
+                <button class="btn ghost" id="setWeeklyGoalsBtn">Definir metas</button>
+                <button class="btn ghost" id="openVocationalBtn">Orientación vocacional</button>
+              </div>
+            </div>
+
+            <div class="card span-12">
+              <div class="card-header">
+                <h2>Continuar donde quedé</h2>
+                <div class="muted small">Sin fricción. Sin “¿dónde hago clic?”</div>
+              </div>
+              <div class="continue-row">
+                <div class="continue-info">
+                  <div class="continue-title" id="continueTitle">Aún no has comenzado.</div>
+                  <div class="muted small" id="continueSubtitle">Haz un diagnóstico o empieza una ruta.</div>
+                </div>
+                <button class="btn primary" id="continueNowBtn">Continuar</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- STUDY -->
+        <section id="page-study" class="page hidden">
+          <div class="page-header">
+            <div>
+              <h1>Estudiar</h1>
+              <p class="muted">Contenido ordenado por materia → tema → eje → nivel. Separación clara: aprender / practicar / evaluarse.</p>
+            </div>
+            <div class="pill-row">
+              <span class="pill">🎓 PAES (Lenguaje, M1, M2, Ciencias, Historia)</span>
+              <span class="pill">📘 IB (SL & HL)</span>
+              <span class="pill">🎥 Videos curados</span>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="card span-4">
+              <div class="card-header">
+                <h2>Materias</h2>
+                <div class="muted small">Elige 1 y te guiamos</div>
+              </div>
+              <div id="subjectsList" class="list"></div>
+            </div>
+
+            <div class="card span-8">
+              <div class="card-header">
+                <h2 id="studyTitle">Selecciona una materia</h2>
+                <div class="muted small" id="studySubtitle">Verás rutas, videos recomendados y práctica asociada.</div>
+              </div>
+
+              <div id="studyPanel" class="stack empty-state">
+                <div class="empty-emoji">📚</div>
+                <div class="empty-title">Todo ordenado, sin saturación</div>
+                <div class="muted">Elige una materia para ver temas, miniclases, clases largas y ejercicios tipo PAES/IB explicados.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PRACTICE -->
+        <section id="page-practice" class="page hidden">
+          <div class="page-header">
+            <div>
+              <h1>Practicar</h1>
+              <p class="muted">Ejercicios tipo PAES/IB, ensayos ilimitados, cronometrados y con explicación por pregunta.</p>
+            </div>
+            <div class="pill-row">
+              <span class="pill">⏲ Cronometrado</span>
+              <span class="pill">✅ Corrección automática</span>
+              <span class="pill">🧠 Errores comunes</span>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="card span-5">
+              <div class="card-header">
+                <h2>Crear práctica</h2>
+                <div class="muted small">Por materia, eje o debilidad</div>
+              </div>
+
+              <div class="form">
+                <label class="label">Modo</label>
+                <div class="segmented" role="tablist">
+                  <button class="seg active" data-mode="drill">Ejercicios</button>
+                  <button class="seg" data-mode="exam">Ensayo</button>
+                </div>
+
+                <label class="label">Materia</label>
+                <select id="practiceSubject" class="select"></select>
+
+                <label class="label">Dificultad</label>
+                <select id="practiceLevel" class="select">
+                  <option value="basico">Básico</option>
+                  <option value="medio">Medio</option>
+                  <option value="alto">Alto</option>
+                </select>
+
+                <label class="label">Tiempo (solo ensayo)</label>
+                <select id="practiceTime" class="select">
+                  <option value="0">Sin tiempo</option>
+                  <option value="15">15 min</option>
+                  <option value="30">30 min</option>
+                  <option value="60">60 min</option>
+                </select>
+
+                <button id="startPracticeBtn" class="btn primary">Empezar</button>
+                <div class="muted small">Tip: Un error = aprendizaje. Aquí no se castiga, se guía.</div>
+              </div>
+            </div>
+
+            <div class="card span-7">
+              <div class="card-header">
+                <h2>Sesión</h2>
+                <div class="muted small" id="timerLabel">—</div>
+              </div>
+
+              <div id="practicePanel" class="stack empty-state">
+                <div class="empty-emoji">📝</div>
+                <div class="empty-title">Listo cuando tú estés</div>
+                <div class="muted">Crea una sesión a la izquierda y aparecerán preguntas con explicación paso a paso.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PROGRESS -->
+        <section id="page-progress" class="page hidden">
+          <div class="page-header">
+            <div>
+              <h1>Progreso</h1>
+              <p class="muted">Dashboard personal: historial, evolución, debilidades y recomendaciones automáticas.</p>
+            </div>
+            <div class="pill-row">
+              <span class="pill">📈 Evolución</span>
+              <span class="pill">🎯 Debilidades</span>
+              <span class="pill">🔁 Repasos sugeridos</span>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="card span-7">
+              <div class="card-header">
+                <h2>Evolución</h2>
+                <div class="muted small">No técnico. Claro. Útil.</div>
+              </div>
+              <div id="progressChart" class="bars" aria-label="Gráfico simple de progreso"></div>
+              <div class="muted small">Comparación con tu promedio + tendencia.</div>
+            </div>
+
+            <div class="card span-5">
+              <div class="card-header">
+                <h2>Recomendaciones</h2>
+                <div class="muted small">Qué estudiar / cuándo repasar / qué reforzar</div>
+              </div>
+              <div id="recommendations" class="stack"></div>
+              <div class="card-actions">
+                <button id="scheduleReviewsBtn" class="btn ghost">Programar repasos</button>
+                <button id="resetDataBtn" class="btn danger ghost">Reset local</button>
+              </div>
+            </div>
+
+            <div class="card span-12">
+              <div class="card-header">
+                <h2>Historial de ensayos</h2>
+                <div class="muted small">Corrección + explicación por pregunta</div>
+              </div>
+              <div id="attemptsTable" class="table"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TUTOR -->
+        <section id="page-tutor" class="page hidden">
+          <div class="page-header">
+            <div>
+              <h1>Tutor IA 24/7</h1>
+              <p class="muted">Acompaña, no reemplaza al profe. Explica paso a paso, reexplica “como si tuvieras 12”, detecta errores comunes y planifica estudio.</p>
+            </div>
+            <div class="pill-row">
+              <span class="pill">🧩 Paso a paso</span>
+              <span class="pill">🗺 Plan diario</span>
+              <span class="pill">🧠 Errores típicos</span>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="card span-8">
+              <div class="card-header">
+                <h2>Chat</h2>
+                <div class="muted small">Siempre visible (no escondido).</div>
+              </div>
+
+              <div id="chatLog" class="chat-log" aria-label="Chat con tutor IA"></div>
+
+              <div class="chat-bar">
+                <select id="tutorMode" class="select compact">
+                  <option value="pasoapaso">Resolver paso a paso</option>
+                  <option value="como12">Explicar como si tuviera 12</option>
+                  <option value="plan">Planificar estudio diario</option>
+                  <option value="simulacion">Simular preguntas PAES/IB</option>
+                  <option value="errores">Detectar errores comunes</option>
+                </select>
+
+                <input id="chatInput" class="input" placeholder="Escribe tu duda (ej: 'MRUA', 'probabilidad', 'Histo Chile 1973', 'IB HL calculus')..." />
+                <button id="sendChatBtn" class="btn primary">Enviar</button>
+              </div>
+
+              <div class="muted small">
+                Nota: Este demo trae respuestas “mock”. Para Tutor real: conecta tu API (OpenAI u otra) en <code>app.js</code>.
+              </div>
+            </div>
+
+            <div class="card span-4">
+              <div class="card-header">
+                <h2>Atajos</h2>
+                <div class="muted small">Guía rápida</div>
+              </div>
+
+              <div class="stack">
+                <button class="btn ghost" data-quick="diagnostico">Hacer diagnóstico</button>
+                <button class="btn ghost" data-quick="ruta">Generar ruta</button>
+                <button class="btn ghost" data-quick="repaso">¿Qué repaso hoy?</button>
+                <button class="btn ghost" data-quick="ansiedad">Me siento ansiosa/o</button>
+
+                <div class="divider"></div>
+
+                <div class="mini-card">
+                  <div class="mini-title">Orientación vocacional</div>
+                  <div class="mini-text">Simulador de puntajes + carreras + ponderaciones (base).</div>
+                  <button class="btn tiny ghost" id="openVocationalBtn2">Abrir</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MODALS -->
+        <div id="modalBackdrop" class="modal-backdrop hidden"></div>
+
+        <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Ventana">
+          <div class="modal-header">
+            <div id="modalTitle" class="modal-title">Título</div>
+            <button id="closeModalBtn" class="btn ghost">✕</button>
+          </div>
+          <div id="modalBody" class="modal-body"></div>
+          <div class="modal-actions" id="modalActions"></div>
+        </div>
+      </section>
+
+      <!-- FLOATING TUTOR (always visible) -->
+      <aside class="tutor-float" aria-label="Tutor IA flotante">
+        <button id="openTutorBtn" class="tutor-bubble" title="Abrir Tutor IA">🤖</button>
+        <div class="tutor-hint">Tutor IA</div>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <div class="muted small">
+        Transparencia: este sitio no promete “puntajes mágicos”. Te muestra progreso real, debilidades y próximos pasos.
+      </div>
+      <div class="muted small">
+        © Preu PAES + IB • Demo local (sin servidor)
+      </div>
+    </footer>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
